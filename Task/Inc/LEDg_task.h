@@ -5,3 +5,5 @@
 #endif //LEDG_TASK_H
 
 #include "stm32f4xx_hal.h"
+
+void LEDg_Task();

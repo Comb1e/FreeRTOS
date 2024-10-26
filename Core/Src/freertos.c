@@ -25,7 +25,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "LEDg_task.h"
+#include "LEDr_task.h"
+#include "imu_task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,25 +56,25 @@ const osThreadAttr_t defaultTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for LEDR_TASK */
-osThreadId_t LEDR_TASKHandle;
-const osThreadAttr_t LEDR_TASK_attributes = {
-  .name = "LEDR_TASK",
+/* Definitions for START_LEDR_TASK */
+osThreadId_t START_LEDR_TASKHandle;
+const osThreadAttr_t START_LEDR_TASK_attributes = {
+  .name = "START_LEDR_TASK",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
-/* Definitions for LEDG_TASK */
-osThreadId_t LEDG_TASKHandle;
-const osThreadAttr_t LEDG_TASK_attributes = {
-  .name = "LEDG_TASK",
+/* Definitions for START_LEDG_TASK */
+osThreadId_t START_LEDG_TASKHandle;
+const osThreadAttr_t START_LEDG_TASK_attributes = {
+  .name = "START_LEDG_TASK",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
-/* Definitions for IMU_TASK */
-osThreadId_t IMU_TASKHandle;
-const osThreadAttr_t IMU_TASK_attributes = {
-  .name = "IMU_TASK",
-  .stack_size = 128 * 4,
+/* Definitions for START_IMU_TASK */
+osThreadId_t START_IMU_TASKHandle;
+const osThreadAttr_t START_IMU_TASK_attributes = {
+  .name = "START_IMU_TASK",
+  .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
 
@@ -82,9 +84,9 @@ const osThreadAttr_t IMU_TASK_attributes = {
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
-void LEDr_task(void *argument);
-void LEDg_task(void *argument);
-void imu_task(void *argument);
+void StartLEDrTask(void *argument);
+void StartLEDgTask(void *argument);
+void StartIMUTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -118,14 +120,14 @@ void MX_FREERTOS_Init(void) {
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
-  /* creation of LEDR_TASK */
-  LEDR_TASKHandle = osThreadNew(LEDr_task, NULL, &LEDR_TASK_attributes);
+  /* creation of START_LEDR_TASK */
+  START_LEDR_TASKHandle = osThreadNew(StartLEDrTask, NULL, &START_LEDR_TASK_attributes);
 
-  /* creation of LEDG_TASK */
-  LEDG_TASKHandle = osThreadNew(LEDg_task, NULL, &LEDG_TASK_attributes);
+  /* creation of START_LEDG_TASK */
+  START_LEDG_TASKHandle = osThreadNew(StartLEDgTask, NULL, &START_LEDG_TASK_attributes);
 
-  /* creation of IMU_TASK */
-  IMU_TASKHandle = osThreadNew(imu_task, NULL, &IMU_TASK_attributes);
+  /* creation of START_IMU_TASK */
+  START_IMU_TASKHandle = osThreadNew(StartIMUTask, NULL, &START_IMU_TASK_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -155,58 +157,62 @@ void StartDefaultTask(void *argument)
   /* USER CODE END StartDefaultTask */
 }
 
-/* USER CODE BEGIN Header_LEDr_task */
+/* USER CODE BEGIN Header_StartLEDrTask */
 /**
-* @brief Function implementing the LEDR_TASK thread.
+* @brief Function implementing the START_LEDR_TASK thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_LEDr_task */
-__weak void LEDr_task(void *argument)
+/* USER CODE END Header_StartLEDrTask */
+void StartLEDrTask(void *argument)
 {
-  /* USER CODE BEGIN LEDr_task */
+  /* USER CODE BEGIN StartLEDrTask */
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    LEDr_Task();
+    osDelay(500);
   }
-  /* USER CODE END LEDr_task */
+  /* USER CODE END StartLEDrTask */
 }
 
-/* USER CODE BEGIN Header_LEDg_task */
+/* USER CODE BEGIN Header_StartLEDgTask */
 /**
-* @brief Function implementing the LEDG_TASK thread.
+* @brief Function implementing the START_LEDG_TASK thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_LEDg_task */
-__weak void LEDg_task(void *argument)
+/* USER CODE END Header_StartLEDgTask */
+void StartLEDgTask(void *argument)
 {
-  /* USER CODE BEGIN LEDg_task */
+  /* USER CODE BEGIN StartLEDgTask */
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    LEDg_Task();
+    osDelay(1000);
   }
-  /* USER CODE END LEDg_task */
+  /* USER CODE END StartLEDgTask */
 }
 
-/* USER CODE BEGIN Header_imu_task */
+/* USER CODE BEGIN Header_StartIMUTask */
 /**
-* @brief Function implementing the IMU_TASK thread.
+* @brief Function implementing the START_IMU_TASK thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_imu_task */
-__weak void imu_task(void *argument)
+/* USER CODE END Header_StartIMUTask */
+void StartIMUTask(void *argument)
 {
-  /* USER CODE BEGIN imu_task */
+  /* USER CODE BEGIN StartIMUTask */
+  IMU_Init();
   /* Infinite loop */
   for(;;)
   {
+    IMU_Task();
     osDelay(1);
   }
-  /* USER CODE END imu_task */
+  /* USER CODE END StartIMUTask */
 }
 
 /* Private application code --------------------------------------------------*/

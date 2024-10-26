@@ -4,8 +4,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-void LEDg_task(void *argument)
+void LEDg_Task()
 {
     HAL_GPIO_TogglePin(GPIOH,GPIO_PIN_11);
-    osDelay(1000);
 }

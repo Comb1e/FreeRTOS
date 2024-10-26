@@ -6,3 +6,5 @@
 #endif //LEDR_TASK_H
 
 #include "stm32f4xx_hal.h"
+
+void LEDr_Task();

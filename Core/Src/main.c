@@ -19,11 +19,16 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "dma.h"
+#include "spi.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "FreeRTOS.h"
+#include "bsp_dwt.h"
+#include "BMI088driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -86,8 +91,12 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_SPI1_Init();
+  MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
-
+  DWT_Init(168);
+  while (BMI088_init(&hspi1, 1) != BMI088_NO_ERROR);
   /* USER CODE END 2 */
 
   /* Init scheduler */
